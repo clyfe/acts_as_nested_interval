@@ -9,10 +9,10 @@ This act implements a nested-interval tree. You can find all descendants or all
 ancestors with just one select query. You can insert and delete records without
 a full table update.
 
-This act requires a "parent_id" foreign key column, and "lftp" and "lftq"
+This act requires a `parent_id` foreign key column, and `lftp` and `lftq`
 integer columns. If your database does not support stored procedures then you
-also need "rgtp" and "rgtq" integer columns, and if your database does not
-support functional indexes then you also need a "rgt" float column. The "lft"
+also need `rgtp` and `rgtq` integer columns, and if your database does not
+support functional indexes then you also need a `rgt` float column. The `lft`
 float column is optional.
 
 Example:
@@ -79,21 +79,19 @@ Region.roots
 # => [earth]
 ```
 
-The "mediant" of two rationals is the rational with the sum of the two
+The `mediant` of two rationals is the rational with the sum of the two
 numerators for the numerator, and the sum of the two denominators for the
 denominator (where the denominators are positive). The mediant is numerically
-between the two rationals. Example: 3 / 5 is the mediant of 1 / 2 and 2 / 3,
-and 1 / 2 < 3 / 5 < 2 / 3.
+between the two rationals.
+Example: `3 / 5` is the mediant of `1 / 2` and `2 / 3`, and `1 / 2 < 3 / 5 < 2 / 3`.
 
-Each record "covers" a half-open interval (lftp / lftq, rgtp / rgtq]. The tree
-root covers (0 / 1, 1 / 1]. The first child of a record covers interval
-(mediant{lftp / lftq, rgtp / rgtq}, rgtp / rgtq]; the next child covers
-interval (mediant{lftp / lftq, mediant{lftp / lftq, rgtp / rgtq}},
-                   mediant{lftp / lftq, rgtp / rgtq}].
+Each record `covers` a half-open interval `(lftp / lftq, rgtp / rgtq]`. The tree
+root covers `(0 / 1, 1 / 1]`. The first child of a record covers interval
+`(mediant{lftp / lftq, rgtp / rgtq}, rgtp / rgtq]`; the next child covers the interval
+`(mediant{lftp / lftq, mediant{lftp / lftq, rgtp / rgtq}}, mediant{lftp / lftq, rgtp / rgtq}]`.
 
 With this construction each lftp and lftq are relatively prime and the identity
-
-    lftq * rgtp = 1 + lftp * rgtq holds.
+`lftq * rgtp = 1 + lftp * rgtq holds`.
 
 Example:
 
