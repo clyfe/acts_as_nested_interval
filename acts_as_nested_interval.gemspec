@@ -7,11 +7,11 @@ require "acts_as_nested_interval/version"
 Gem::Specification.new do |s|
   s.name        = "acts_as_nested_interval"
   s.version     = ActsAsNestedInterval::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of ActsAsNestedInterval."
-  s.description = "TODO: Description of ActsAsNestedInterval."
+  s.authors     = ["Nicolae Claudius", "Pythonic"]
+  s.email       = ["nicolae_claudius@yahoo.com"]
+  s.homepage    = "https://github.com/clyfe/acts_as_nested_interval"
+  s.summary     = "Encode Trees in RDBMS using nested interval method."
+  s.description = "Encode Trees in RDBMS using nested interval method for powerful querying and speedy inserts."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
