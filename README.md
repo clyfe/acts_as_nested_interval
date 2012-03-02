@@ -28,11 +28,11 @@ create_table :regions do |t|
   t.float :rgt, :null => false
   t.string :name, :null => false
 end
-create_index :regions, :parent_id
-create_index :regions, :lftp
-create_index :regions, :lftq
-create_index :regions, :lft
-create_index :regions, :rgt
+add_index :regions, :parent_id
+add_index :regions, :lftp
+add_index :regions, :lftq
+add_index :regions, :lft
+add_index :regions, :rgt
 ```
 
 The size of the tree is limited by the precision of the integer and floating
