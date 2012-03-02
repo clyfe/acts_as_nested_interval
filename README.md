@@ -1,4 +1,4 @@
-= ActsAsNestedInterval
+# ActsAsNestedInterval
 
 Pythonic's acts_as_nested_interval updated to Rails 3 and gemified.
 This: https://github.com/clyfe/acts_as_nested_interval
@@ -17,21 +17,23 @@ float column is optional.
 
 Example:
 
-    create_table :regions do |t|
-      t.integer :parent_id
-      t.integer :lftp, :null => false
-      t.integer :lftq, :null => false
-      t.integer :rgtp, :null => false
-      t.integer :rgtq, :null => false
-      t.float :lft, :null => false
-      t.float :rgt, :null => false
-      t.string :name, :null => false
-    end
-    create_index :regions, :parent_id
-    create_index :regions, :lftp
-    create_index :regions, :lftq
-    create_index :regions, :lft
-    create_index :regions, :rgt
+```ruby
+create_table :regions do |t|
+  t.integer :parent_id
+  t.integer :lftp, :null => false
+  t.integer :lftq, :null => false
+  t.integer :rgtp, :null => false
+  t.integer :rgtq, :null => false
+  t.float :lft, :null => false
+  t.float :rgt, :null => false
+  t.string :name, :null => false
+end
+create_index :regions, :parent_id
+create_index :regions, :lftp
+create_index :regions, :lftq
+create_index :regions, :lft
+create_index :regions, :rgt
+```
 
 The size of the tree is limited by the precision of the integer and floating
 point data types in the database.
@@ -48,30 +50,31 @@ This act provides these instance methods:
   depth -- returns depth of record.
 
 Example:
+```ruby
+class Region < ActiveRecord::Base
+  acts_as_nested_interval
+end
 
-    class Region < ActiveRecord::Base
-      acts_as_nested_interval
-    end
-
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.new :name => "New Zealand"
-    oceania.children << new_zealand
-    earth.descendants
-    # => [oceania, australia, new_zealand]
-    earth.children
-    # => [oceania]
-    oceania.children
-    # => [australia, new_zealand]
-    oceania.depth
-    # => 1
-    australia.parent
-    # => oceania
-    new_zealand.ancestors
-    # => [earth, oceania]
-    Region.roots
-    # => [earth]
+earth = Region.create :name => "Earth"
+oceania = Region.create :name => "Oceania", :parent => earth
+australia = Region.create :name => "Australia", :parent => oceania
+new_zealand = Region.new :name => "New Zealand"
+oceania.children << new_zealand
+earth.descendants
+# => [oceania, australia, new_zealand]
+earth.children
+# => [oceania]
+oceania.children
+# => [australia, new_zealand]
+oceania.depth
+# => 1
+australia.parent
+# => oceania
+new_zealand.ancestors
+# => [earth, oceania]
+Region.roots
+# => [earth]
+```
 
 The "mediant" of two rationals is the rational with the sum of the two
 numerators for the numerator, and the sum of the two denominators for the
@@ -127,8 +130,8 @@ linear transform to lftp, lftq of all descendants:
 You should acquire a table lock before moving a record.
 
 Example:
-
-    pacific = Region.create :name => "Pacific", :parent => earth
-    oceania.parent = pacific
-    oceania.save!
-
+```ruby
+pacific = Region.create :name => "Pacific", :parent => earth
+oceania.parent = pacific
+oceania.save!
+```
