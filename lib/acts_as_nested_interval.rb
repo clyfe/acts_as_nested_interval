@@ -44,9 +44,9 @@ module ActsAsNestedInterval
         include ActsAsNestedInterval::NodeInstanceMethods
         
         # TODO make into before filters
-        alias_method_chain :create, :nested_interval
-        alias_method_chain :destroy, :nested_interval
-        alias_method_chain :update, :nested_interval
+        before_create :create_nested_interval
+        before_destroy :destroy_nested_interval
+        before_update :update_nested_interval
         
         if columns_hash["lft"]
           def descendants
@@ -84,19 +84,17 @@ module ActsAsNestedInterval
     end
 
     # Creates record.
-    def create_with_nested_interval
+    def create_nested_interval
       if read_attribute(nested_interval_foreign_key).nil?
         set_nested_interval 0, 1
       else
         set_nested_interval *parent.lock!.next_child_lft
       end
-      create_without_nested_interval
     end
 
     # Destroys record.
-    def destroy_with_nested_interval
+    def destroy_nested_interval
       lock! rescue nil
-      destroy_without_nested_interval
     end
 
     def nested_interval_scope
@@ -109,7 +107,7 @@ module ActsAsNestedInterval
 
     # Updates record, updating descendants if parent association updated,
     # in which case caller should first acquire table lock.
-    def update_with_nested_interval
+    def update_nested_interval
       if read_attribute(nested_interval_foreign_key).nil?
         set_nested_interval 0, 1
       elsif !association(:parent).updated?
@@ -147,7 +145,6 @@ module ActsAsNestedInterval
         ), mysql_tmp && %(@lftp := lftp)
         db_descendants.update_all %(lft = 1.0 * lftp / lftq) if has_attribute?(:lft)
       end
-      update_without_nested_interval
     end
 
     def ancestors
