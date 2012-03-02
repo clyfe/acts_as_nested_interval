@@ -1,7 +1,7 @@
 # Copyright (c) 2007, 2008 Pythonic Pty Ltd
 # http://www.pythonic.com.au/
 
-# Copyright (c) 20012 Nicolae Claudius
+# Copyright (c) 2012 Nicolae Claudius
 # https://github.com/clyfe
 
 require 'acts_as_nested_interval/version'
