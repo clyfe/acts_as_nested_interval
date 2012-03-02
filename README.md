@@ -50,6 +50,7 @@ This act provides these instance methods:
   depth -- returns depth of record.
 
 Example:
+
 ```ruby
 class Region < ActiveRecord::Base
   acts_as_nested_interval
@@ -130,6 +131,7 @@ linear transform to lftp, lftq of all descendants:
 You should acquire a table lock before moving a record.
 
 Example:
+
 ```ruby
 pacific = Region.create :name => "Pacific", :parent => earth
 oceania.parent = pacific
