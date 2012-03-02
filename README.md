@@ -1,9 +1,9 @@
 # ActsAsNestedInterval
 
-Pythonic's acts_as_nested_interval updated to Rails 3 and gemified.
-This: https://github.com/clyfe/acts_as_nested_interval
-Original: https://github.com/pythonic/acts_as_nested_interval
-Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.
+* Pythonic's acts_as_nested_interval updated to Rails 3 and gemified.
+* This: https://github.com/clyfe/acts_as_nested_interval
+* Original: https://github.com/pythonic/acts_as_nested_interval
+* Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.
 
 This act implements a nested-interval tree. You can find all descendants or all
 ancestors with just one select query. You can insert and delete records without
@@ -39,15 +39,17 @@ The size of the tree is limited by the precision of the integer and floating
 point data types in the database.
 
 This act provides these named scopes:
-  roots -- returns roots of tree.
-  preorder -- returns records for preorder traversal.
+
+    roots -- returns roots of tree.
+    preorder -- returns records for preorder traversal.
 
 This act provides these instance methods:
-  parent -- returns parent of record.
-  children -- returns children of record.
-  ancestors -- returns scoped ancestors of record.
-  descendants -- returns scoped descendants of record.
-  depth -- returns depth of record.
+
+    parent -- returns parent of record.
+    children -- returns children of record.
+    ancestors -- returns scoped ancestors of record.
+    descendants -- returns scoped descendants of record.
+    depth -- returns depth of record.
 
 Example:
 
@@ -90,7 +92,8 @@ interval (mediant{lftp / lftq, mediant{lftp / lftq, rgtp / rgtq}},
                    mediant{lftp / lftq, rgtp / rgtq}].
 
 With this construction each lftp and lftq are relatively prime and the identity
-lftq * rgtp = 1 + lftp * rgtq holds.
+
+    lftq * rgtp = 1 + lftp * rgtq holds.
 
 Example:
 
