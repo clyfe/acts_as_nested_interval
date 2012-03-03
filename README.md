@@ -9,11 +9,10 @@ This act implements a nested-interval tree. You can find all descendants or all
 ancestors with just one select query. You can insert and delete records without
 a full table update.
 
-This act requires a `parent_id` foreign key column, and `lftp` and `lftq`
-integer columns. If your database does not support stored procedures then you
-also need `rgtp` and `rgtq` integer columns, and if your database does not
-support functional indexes then you also need a `rgt` float column. The `lft`
-float column is optional.
+* requires a `parent_id` foreign key column, and `lftp` and `lftq` integer columns.
+* if your database does not support stored procedures then you also need `rgtp` and `rgtq` integer columns
+* if your database does not support functional indexes then you also need a `rgt` float column
+* the `lft` float column is optional
 
 Example:
 

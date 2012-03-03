@@ -161,4 +161,13 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     end
     region.descendants
   end
+
+  def test_virtual_root
+    Region.virtual_root = true
+    r1 = Region.create :name => "1"
+    r2 = Region.create :name => "2"
+    r3 = Region.create :name => "3"
+    assert r3.rgt <= r2.lft
+    assert r2.rgt <= r1.lft
+  end
 end
