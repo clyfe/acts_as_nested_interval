@@ -162,7 +162,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     region.descendants
   end
 
-  def test_virtual_root
+  def test_virtual_root_order
     Region.virtual_root = true
     r1 = Region.create :name => "1"
     r2 = Region.create :name => "2"
@@ -170,4 +170,15 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     assert r3.rgt <= r2.lft
     assert r2.rgt <= r1.lft
   end
+  
+  def test_virtual_root_allocation
+    Region.virtual_root = true
+    r1 = Region.create :name => "1"
+    r2 = Region.create :name => "2", :parent => r1
+    r3 = Region.create :name => "3"
+    r4 = Region.create :name => "4"
+    assert_equal Region.roots.order('lftq DESC').map { |r| [r.name, r.lft, r.rgt] },
+      [["4", 0.25, 0.3333333333333333], ["3", 0.3333333333333333, 0.5], ["1", 0.5, 1.0]]
+  end
+  
 end
