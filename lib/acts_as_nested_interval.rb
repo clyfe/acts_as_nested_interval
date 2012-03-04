@@ -165,7 +165,7 @@ module ActsAsNestedInterval
       end
       
       set_nested_interval *parent.next_child_lft
-      mysql_tmp = "@" if connection.adapter_name == "MySQL"
+      mysql_tmp = "@" if ["MySQL", "Mysql2"].include?(connection.adapter_name)
       cpp = db_self.lftq * rgtp - db_self.rgtq * lftp
       cpq = db_self.rgtp * lftp - db_self.lftp * rgtp
       cqp = db_self.lftq * rgtq - db_self.rgtq * lftq
