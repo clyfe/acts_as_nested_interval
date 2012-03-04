@@ -86,7 +86,15 @@ module ActsAsNestedInterval
         else
           def descendants
             quoted_table_name = self.class.quoted_table_name
-            nested_interval_scope.where %((#{quoted_table_name}.lftp != #{rgtp} OR #{quoted_table_name}.lftq != #{rgtq}) AND #{quoted_table_name}.lftp BETWEEN 1 + #{quoted_table_name}.lftq * CAST(#{lftp} AS BIGINT) / #{lftq} AND #{quoted_table_name}.lftq * CAST(#{rgtp} AS BIGINT) / #{rgtq})
+            nested_interval_scope.where <<-SQL
+              (
+                #{quoted_table_name}.lftp != #{rgtp} OR
+                #{quoted_table_name}.lftq != #{rgtq}
+              ) AND
+              #{quoted_table_name}.lftp BETWEEN
+                1 + #{quoted_table_name}.lftq * CAST(#{lftp} AS BIGINT) / #{lftq} AND
+                #{quoted_table_name}.lftq * CAST(#{rgtp} AS BIGINT) / #{rgtq}
+            SQL
           end
         end
         
@@ -151,7 +159,7 @@ module ActsAsNestedInterval
     def update_nested_interval_move
       db_self = self.class.find(id)
       db_parent = self.class.find(read_attribute(nested_interval_foreign_key))
-      if db_self.descendant_of?(db_parent)
+      if db_self.ancestor_of?(db_parent)
         errors.add nested_interval_foreign_key, "is descendant"
         raise ActiveRecord::RecordInvalid, self
       end
@@ -181,11 +189,11 @@ module ActsAsNestedInterval
       db_descendants.update_all %(lft = 1.0 * lftp / lftq) if has_attribute?(:lft)
     end
     
-    def descendant_of?(db_parent)
-      db_parent.lftp == lftp && db_parent.lftq == lftq ||
-        db_parent.lftp > db_parent.lftq * lftp / lftq &&
-        db_parent.lftp <= db_parent.lftq * rgtp / rgtq &&
-        (db_parent.lftp != rgtp || db_parent.lftq != rgtq)
+    def ancestor_of?(node)
+      node.lftp == lftp && node.lftq == lftq ||
+        node.lftp > node.lftq * lftp / lftq &&
+        node.lftp <= node.lftq * rgtp / rgtq &&
+        (node.lftp != rgtp || node.lftq != rgtq)
     end
 
     def ancestors
