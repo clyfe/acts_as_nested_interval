@@ -74,8 +74,7 @@ module ActsAsNestedInterval
           def descendants
             quoted_table_name = self.class.quoted_table_name
             nested_interval_scope.where <<-SQL
-              (
-                #{quoted_table_name}.lftp != #{rgtp} OR 
+              ( #{quoted_table_name}.lftp != #{rgtp} OR 
                 #{quoted_table_name}.lftq != #{rgtq}
               ) AND
               #{quoted_table_name}.lftp BETWEEN 
@@ -87,8 +86,7 @@ module ActsAsNestedInterval
           def descendants
             quoted_table_name = self.class.quoted_table_name
             nested_interval_scope.where <<-SQL
-              (
-                #{quoted_table_name}.lftp != #{rgtp} OR
+              ( #{quoted_table_name}.lftp != #{rgtp} OR
                 #{quoted_table_name}.lftq != #{rgtq}
               ) AND
               #{quoted_table_name}.lftp BETWEEN
