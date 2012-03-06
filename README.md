@@ -166,6 +166,7 @@ Region.rebuild_nested_interval_tree!
 ```
 
 NOTE! About `rebuild_nested_interval_tree!`:
+
 * zeroes all your tree intervals before recomputing them!
 * does a lot of N+1 queries of type `record.parent` and not only.
   This might change once the AR identity_map is finished.
