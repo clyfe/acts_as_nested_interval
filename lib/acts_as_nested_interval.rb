@@ -43,15 +43,15 @@ module ActsAsNestedInterval
       else
         scope :preorder, order('nested_interval_rgt(lftp, lftq) DESC, lftp ASC')
       end
-      
+
       class_eval do
         include ActsAsNestedInterval::NodeInstanceMethods
-        
+
         # TODO make into before filters
         before_create :create_nested_interval
         before_destroy :destroy_nested_interval
         before_update :update_nested_interval
-        
+
         if columns_hash["lft"]
           def descendants
             quoted_table_name = self.class.quoted_table_name
@@ -96,7 +96,36 @@ module ActsAsNestedInterval
           end
         end
         
+        def self.rebuild_nested_interval_tree!
+          skip_callback :update, :before, :update_nested_interval
+          skip_callback :update, :before, :sync_childre
+          scope :roots, where(nested_interval_foreign_key => nil).where("#{quoted_table_name}.lftq > 0")
+          update_all(:lftp => 0, :lftq => 0)
+          update_all(:rgtp => 0) if columns_hash["rgtp"]
+          update_all(:rgtq => 0) if columns_hash["rgtq"]
+          update_all(:lft => 0) if columns_hash["lft"]
+          update_all(:rgt => 0) if columns_hash["rgt"]
+          clear_cache!
+
+          scoped.find_each do |d|
+            begin
+              d.create_nested_interval
+              unless d.save
+                puts "WARNING #{d.name} did not save because #{d.errors.inspect}"
+              end
+            rescue => e
+              puts "WARNING #{d.name} exception because #{e.message}"
+              puts "WARNING lftq: #{d.lftq}, llftp: #{d.lftp}"
+            end
+          end
+
+          set_callback :update, :before, :update_nested_interval
+          set_callback :update, :before, :sync_childre
+          scope :roots, where(nested_interval_foreign_key => nil)
+        end
+        
       end
+      
     end
   end
 

@@ -1,5 +1,7 @@
 # ActsAsNestedInterval
 
+## About
+
 * Pythonic's acts_as_nested_interval updated to Rails 3 and gemified.
 * This: https://github.com/clyfe/acts_as_nested_interval
 * Original: https://github.com/pythonic/acts_as_nested_interval
@@ -8,6 +10,18 @@
 This act implements a nested-interval tree. You can find all descendants or all
 ancestors with just one select query. You can insert and delete records without
 a full table update.
+
+## Install
+
+```ruby
+# add to Gemfile
+gem 'acts_as_nested_interval'
+```
+
+```sh
+# install
+bundle install
+```
 
 * requires a `parent_id` foreign key column, and `lftp` and `lftq` integer columns.
 * if your database does not support stored procedures then you also need `rgtp` and `rgtq` integer columns
@@ -34,21 +48,27 @@ add_index :regions, :lft
 add_index :regions, :rgt
 ```
 
+## Usage
+
 The size of the tree is limited by the precision of the integer and floating
 point data types in the database.
 
 This act provides these named scopes:
 
-    roots -- returns roots of tree.
-    preorder -- returns records for preorder traversal.
+```ruby
+Region.roots    # returns roots of tree.
+Region.preorder # returns records for preorder traversal.
+```
 
 This act provides these instance methods:
 
-    parent -- returns parent of record.
-    children -- returns children of record.
-    ancestors -- returns scoped ancestors of record.
-    descendants -- returns scoped descendants of record.
-    depth -- returns depth of record.
+```ruby
+Region.parent      # returns parent of record.
+Region.children    # returns children of record.
+Region.ancestors   # returns scoped ancestors of record.
+Region.descendants # returns scoped descendants of record.
+Region.depth       # returns depth of record.
+```
 
 Example:
 
@@ -62,21 +82,16 @@ oceania = Region.create :name => "Oceania", :parent => earth
 australia = Region.create :name => "Australia", :parent => oceania
 new_zealand = Region.new :name => "New Zealand"
 oceania.children << new_zealand
-earth.descendants
-# => [oceania, australia, new_zealand]
-earth.children
-# => [oceania]
-oceania.children
-# => [australia, new_zealand]
-oceania.depth
-# => 1
-australia.parent
-# => oceania
-new_zealand.ancestors
-# => [earth, oceania]
-Region.roots
-# => [earth]
+earth.descendants      # => [oceania, australia, new_zealand]
+earth.children         # => [oceania]
+oceania.children       # => [australia, new_zealand]
+oceania.depth          # => 1
+australia.parent       # => oceania
+new_zealand.ancestors  # => [earth, oceania]
+Region.roots           # => [earth]
 ```
+
+## How it works
 
 The `mediant` of two rationals is the rational with the sum of the two
 numerators for the numerator, and the sum of the two denominators for the
@@ -120,6 +135,8 @@ be calculated using the above identity:
 
 where x is the inverse of lftp modulo lftq.
 
+## Moving nodes
+
 To move a record from old.lftp, old.lftq to new.lftp, new.lftq, apply this
 linear transform to lftp, lftq of all descendants:
 
@@ -137,3 +154,18 @@ pacific = Region.create :name => "Pacific", :parent => earth
 oceania.parent = pacific
 oceania.save!
 ```
+
+## Migrating from acts_as_tree
+
+If you come from acts_as_tree or another system where you only have a parent_id,
+to rebuild the intervals based on `acts_as_nested_set`, after you migrated the DB
+and created the columns required by `acts_as_nested_set` run:
+
+```ruby
+Region.rebuild_nested_interval_tree!
+```
+
+NOTE! About `rebuild_nested_interval_tree!`:
+* zeroes all your tree intervals before recomputing them!
+* does a lot of N+1 queries of type `record.parent` and not only.
+  This might change once the AR identity_map is finished.
