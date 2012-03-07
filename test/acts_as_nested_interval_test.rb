@@ -6,7 +6,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_create_root
-    earth = Region.create :name => "Earth"
+    earth = Region.create name: "Earth"
     assert_equal [0, 1], [earth.lftp, earth.lftq]
     assert_equal [1, 1], [earth.rgtp, earth.rgtq]
     assert_equal 1.0 * 0 / 1, earth.lft
@@ -15,8 +15,8 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_create_first_child
-    earth = Region.new :name => "Earth"
-    oceania = Region.new :name => "Oceania", :parent => earth
+    earth = Region.new name: "Earth"
+    oceania = Region.new name: "Oceania", parent: earth
     oceania.save!
     assert_equal [1, 2], [oceania.lftp, oceania.lftq]
     assert_equal [1, 1], [oceania.rgtp, oceania.rgtq]
@@ -25,10 +25,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_create_second_child
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_equal [2, 3], [australia.lftp, australia.lftq]
     assert_equal [1, 1], [australia.rgtp, australia.rgtq]
     assert_equal 1.0 * 2 / 3, australia.lft
@@ -40,8 +40,8 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_append_child
-    earth = Region.create :name => "Earth"
-    oceania = Region.new :name => "Oceania"
+    earth = Region.create name: "Earth"
+    oceania = Region.new name: "Oceania"
     earth.children << oceania
     assert_equal [1, 2], [oceania.lftp, oceania.lftq]
     assert_equal [1, 1], [oceania.rgtp, oceania.rgtq]
@@ -50,10 +50,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_ancestors
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_equal [], earth.ancestors
     assert_equal [earth], oceania.ancestors
     assert_equal [earth, oceania], australia.ancestors
@@ -61,10 +61,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_descendants
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_equal [oceania, australia, new_zealand], earth.descendants.sort_by(&:id)
     assert_equal [australia, new_zealand], oceania.descendants.sort_by(&:id)
     assert_equal [], australia.descendants.sort_by(&:id)
@@ -72,19 +72,19 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_preorder
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    antarctica = Region.create :name => "Antarctica", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    antarctica = Region.create name: "Antarctica", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_equal [earth, oceania, australia, new_zealand, antarctica], Region.preorder
   end
 
   def test_depth
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_equal 0, earth.depth
     assert_equal 1, oceania.depth
     assert_equal 2, australia.depth
@@ -93,10 +93,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
 
   def test_move
     connection = Region.connection
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     assert_raise ActiveRecord::RecordInvalid do
       oceania.parent = oceania
       oceania.save!
@@ -105,7 +105,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
       oceania.parent = australia
       oceania.save!
     end
-    pacific = Region.create :name => "Pacific", :parent => earth
+    pacific = Region.create name: "Pacific", parent: earth
     assert_equal [1, 3], [pacific.lftp, pacific.lftq]
     assert_equal [1, 2], [pacific.rgtp, pacific.rgtq]
     assert_equal 1.0 * 1 / 3, pacific.lft
@@ -137,48 +137,61 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_destroy
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    australia = Region.create :name => "Australia", :parent => oceania
-    new_zealand = Region.create :name => "New Zealand", :parent => oceania
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    australia = Region.create name: "Australia", parent: oceania
+    new_zealand = Region.create name: "New Zealand", parent: oceania
     oceania.destroy
     assert_equal [], earth.descendants
   end
 
   def test_scope
-    earth = Region.create :name => "Earth"
-    oceania = Region.create :name => "Oceania", :parent => earth
-    krypton = Region.create :name => "Krypton", :fiction => true
+    earth = Region.create name: "Earth"
+    oceania = Region.create name: "Oceania", parent: earth
+    krypton = Region.create name: "Krypton", fiction: true
     assert_equal [earth], oceania.ancestors
     assert_equal [], krypton.descendants
   end
 
   def test_limits
-    region = Region.create :name => ""
+    region = Region.create name: ""
     22.times do
-      Region.create :name => "", :parent => region
-      region = Region.create :name => "", :parent => region
+      Region.create name: "", parent: region
+      region = Region.create name: "", parent: region
     end
     region.descendants
   end
 
   def test_virtual_root_order
     Region.virtual_root = true
-    r1 = Region.create :name => "1"
-    r2 = Region.create :name => "2"
-    r3 = Region.create :name => "3"
+    r1 = Region.create name: "1"
+    r2 = Region.create name: "2"
+    r3 = Region.create name: "3"
     assert r3.rgt <= r2.lft
     assert r2.rgt <= r1.lft
   end
   
   def test_virtual_root_allocation
     Region.virtual_root = true
-    r1 = Region.create :name => "1"
-    r2 = Region.create :name => "2", :parent => r1
-    r3 = Region.create :name => "3"
-    r4 = Region.create :name => "4"
-    assert_equal Region.roots.order('lftq DESC').map { |r| [r.name, r.lft, r.rgt] },
-      [["4", 0.25, 0.3333333333333333], ["3", 0.3333333333333333, 0.5], ["1", 0.5, 1.0]]
+    r1 = Region.create name: "Europe"
+    r2 = Region.create name: "Romania", :parent => r1
+    r3 = Region.create name: "Asia"
+    r4 = Region.create name: "America"
+    assert_equal [["Europe", 0.5, 1.0], ["Romania", 0.6666666666666666, 1.0],
+      ["Asia", 0.3333333333333333, 0.5], ["America", 0.25, 0.3333333333333333]],
+      Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
+  end
+  
+  def test_rebuild_nested_interval_tree
+    Region.virtual_root = true
+    r1 = Region.create name: "Europe"
+    r2 = Region.create name: "Romania", parent: r1
+    r3 = Region.create name: "Asia"
+    r4 = Region.create name: "America"
+    Region.rebuild_nested_interval_tree!
+    assert_equal [["Europe", 0.5, 1.0], ["Romania", 0.6666666666666666, 1.0],
+      ["Asia", 0.3333333333333333, 0.5], ["America", 0.25, 0.3333333333333333]],
+      Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
   end
   
 end
