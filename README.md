@@ -26,10 +26,10 @@ gem 'acts_as_nested_interval'
 bundle install
 ```
 
-* requires a `parent_id` foreign key column, and `lftp` and `lftq` integer columns.
-* if your database does not support stored procedures then you also need `rgtp` and `rgtq` integer columns
-* if your database does not support functional indexes then you also need a `rgt` float column
-* the `lft` float column is optional
+Requires a `parent_id` foreign key column, and `lftp` and `lftq` integer columns.  
+If your database does not support stored procedures then you also need `rgtp` and `rgtq` integer columns.  
+If your database does not support functional indexes then you also need a `rgt` float column.  
+The `lft` float column is optional.  
 
 Example:
 
