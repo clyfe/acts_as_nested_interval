@@ -6,7 +6,7 @@ Pythonic's acts_as_nested_interval updated to Rails 3 and gemified.
 
 This act implements a nested-interval tree. You can find all descendants or all
 ancestors with just one select query. You can insert and delete records without
-a full table update (compared to nested set, where at insert half the table is update on average).
+a full table update (compared to nested set, where at insert, half the table is updated on average).
 
 Nested sets/intervals are good if you need to sort in preorder at DB-level.
 If you don't need that give a look to https://github.com/stefankroes/ancestry ,
