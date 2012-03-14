@@ -95,19 +95,20 @@ Region.roots           # => [earth]
 
 ## How it works
 
-The `mediant` of two rationals is the rational with the sum of the two
+The **mediant** of two rationals is the rational with the sum of the two
 numerators for the numerator, and the sum of the two denominators for the
-denominator (where the denominators are positive). The mediant is numerically
-between the two rationals.
-Example: `3 / 5` is the mediant of `1 / 2` and `2 / 3`, and `1 / 2 < 3 / 5 < 2 / 3`.
+denominator (where the denominators are positive).  
+The mediant is numerically between the two rationals.  
+Example: `3/5` is the mediant of `1/2` and `2/3`, and `1/2 < 3/5 < 2/3`.  
 
-Each record `covers` a half-open interval `(lftp / lftq, rgtp / rgtq]`. The tree
-root covers `(0 / 1, 1 / 1]`. The first child of a record covers interval
-`(mediant{lftp / lftq, rgtp / rgtq}, rgtp / rgtq]`; the next child covers the interval
-`(mediant{lftp / lftq, mediant{lftp / lftq, rgtp / rgtq}}, mediant{lftp / lftq, rgtp / rgtq}]`.
+Each record "covers" a half-open interval `(lftp/lftq, rgtp/rgtq]`.  
+The tree root covers `(0/1, 1/1]`.  
+The first child of a record covers interval `(mediant{lftp/lftq, rgtp/rgtq}, rgtp/rgtq]`.  
+The next child covers the interval
+ `(mediant{lftp/lftq, mediant{lftp/lftq, rgtp/rgtq}}, mediant{lftp/lftq, rgtp/rgtq}]`.  
 
 With this construction each lftp and lftq are relatively prime and the identity
-`lftq * rgtp = 1 + lftp * rgtq holds`.
+`lftq * rgtp = 1 + lftp * rgtq` holds.
 
 Example:
 
@@ -139,7 +140,7 @@ where x is the inverse of lftp modulo lftq.
 
 ## Moving nodes
 
-To move a record from old.lftp, old.lftq to new.lftp, new.lftq, apply this
+To move a record from `old.lftp, old.lftq` to `new.lftp, new.lftq`, apply this
 linear transform to lftp, lftq of all descendants:
 
     lftp := (old.lftq * new.rgtp - old.rgtq * new.lftp) * lftp
@@ -167,14 +168,13 @@ and created the columns required by `acts_as_nested_set` run:
 Region.rebuild_nested_interval_tree!
 ```
 
-NOTE! About `rebuild_nested_interval_tree!`:
-
-* zeroes all your tree intervals before recomputing them!
-* does a lot of N+1 queries of type `record.parent` and not only.
-  This might change once the AR identity_map is finished.
+NOTE! About `rebuild_nested_interval_tree!`:  
+It zeroes all your tree intervals before recomputing them!  
+It does a lot of N+1 queries of type `record.parent` and not only.
+This might change once the AR identity_map is finished.
 
 ## Authors
 
-* This: https://github.com/clyfe/acts_as_nested_interval
-* Original: https://github.com/pythonic/acts_as_nested_interval
-* Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.
+This: https://github.com/clyfe/acts_as_nested_interval  
+Original: https://github.com/pythonic/acts_as_nested_interval  
+Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.  
