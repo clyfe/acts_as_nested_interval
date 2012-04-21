@@ -141,8 +141,9 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     oceania = Region.create name: "Oceania", parent: earth
     australia = Region.create name: "Australia", parent: oceania
     new_zealand = Region.create name: "New Zealand", parent: oceania
-    oceania.destroy
-    assert_equal [], earth.descendants
+    assert_raise ActiveRecord::DeleteRestrictionError do
+      oceania.destroy
+    end
   end
 
   def test_scope

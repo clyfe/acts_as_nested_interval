@@ -32,7 +32,7 @@ module ActsAsNestedInterval
     self.nested_interval_lft_index = options[:lft_index]
       
     belongs_to :parent, class_name: name, foreign_key: nested_interval_foreign_key
-    has_many :children, class_name: name, foreign_key: nested_interval_foreign_key, dependent: :destroy
+    has_many :children, class_name: name, foreign_key: nested_interval_foreign_key, dependent: :restrict
     scope :roots, where(nested_interval_foreign_key => nil)
       
     if columns_hash["rgt"]
