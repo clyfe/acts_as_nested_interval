@@ -69,7 +69,7 @@ module ActsAsNestedInterval
     
     def set_nested_interval_for_top
       if self.class.virtual_root
-        set_nested_interval *next_root_lft
+        set_nested_interval(*next_root_lft)
       else
         set_nested_interval 0, 1
       end
@@ -100,15 +100,18 @@ module ActsAsNestedInterval
     # Updates record, updating descendants if parent association updated,
     # in which case caller should first acquire table lock.
     def update_nested_interval
-      if read_attribute(nested_interval_foreign_key).nil?
-        set_nested_interval_for_top
-      elsif !association(:parent).updated?
+      changed = send(:"#{nested_interval_foreign_key}_changed?")
+      if !changed
         db_self = self.class.find(id, :lock => true)
         write_attribute(nested_interval_foreign_key, db_self.read_attribute(nested_interval_foreign_key))
         set_nested_interval db_self.lftp, db_self.lftq
-      else # move
-        # No locking in this case -- caller should have acquired table lock.
-        update_nested_interval_move
+      else
+        if read_attribute(nested_interval_foreign_key).nil? # root move
+          set_nested_interval_for_top
+        else # child move
+          # No locking in this case -- caller should have acquired table lock.
+          update_nested_interval_move
+        end
       end
     end
     
