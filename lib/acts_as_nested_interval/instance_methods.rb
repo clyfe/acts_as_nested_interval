@@ -106,24 +106,27 @@ module ActsAsNestedInterval
         write_attribute(nested_interval_foreign_key, db_self.read_attribute(nested_interval_foreign_key))
         set_nested_interval db_self.lftp, db_self.lftq
       else
-        if read_attribute(nested_interval_foreign_key).nil? # root move
-          set_nested_interval_for_top
-        else # child move
-          # No locking in this case -- caller should have acquired table lock.
-          update_nested_interval_move
-        end
+        # No locking in this case -- caller should have acquired table lock.
+        update_nested_interval_move
       end
     end
     
     def update_nested_interval_move
-      db_self = self.class.find(id)
-      db_parent = self.class.find(read_attribute(nested_interval_foreign_key))
-      if db_self.ancestor_of?(db_parent)
-        errors.add nested_interval_foreign_key, "is descendant"
-        raise ActiveRecord::RecordInvalid, self
+      begin
+        db_self = self.class.find(id)
+        db_parent = self.class.find(read_attribute(nested_interval_foreign_key))
+        if db_self.ancestor_of?(db_parent)
+          errors.add nested_interval_foreign_key, "is descendant"
+          raise ActiveRecord::RecordInvalid, self
+        end
+      rescue ActiveRecord::RecordNotFound => e # root
       end
       
-      set_nested_interval *parent.next_child_lft
+      if read_attribute(nested_interval_foreign_key).nil? # root move
+        set_nested_interval_for_top
+      else # child move
+        set_nested_interval *parent.next_child_lft
+      end
       mysql_tmp = "@" if ["MySQL", "Mysql2"].include?(connection.adapter_name)
       cpp = db_self.lftq * rgtp - db_self.rgtq * lftp
       cpq = db_self.rgtp * lftp - db_self.lftp * rgtp
