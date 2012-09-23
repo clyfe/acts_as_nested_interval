@@ -159,7 +159,7 @@ module ActsAsNestedInterval
     end
 
     def ancestors
-      sqls = ["NULL"]
+      sqls = ['0 = 1']
       p, q = lftp, lftq
       while p != 0
         x = p.inverse(q)
