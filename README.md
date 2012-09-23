@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/clyfe/acts_as_nested_interval.png)](http://travis-ci.org/clyfe/acts_as_nested_interval)
+
 # ActsAsNestedInterval
 
 ## About
@@ -178,4 +180,4 @@ This might change once the AR identity_map is finished.
 
 This: https://github.com/clyfe/acts_as_nested_interval  
 Original: https://github.com/pythonic/acts_as_nested_interval  
-Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.  
+Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.
