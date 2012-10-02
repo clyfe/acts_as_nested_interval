@@ -188,7 +188,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     assert r3.rgt <= r2.lft
     assert r2.rgt <= r1.lft
   end
-
+  
   def test_virtual_root_allocation
     Region.virtual_root = true
     r1 = Region.create name: "Europe"
@@ -196,10 +196,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     r3 = Region.create name: "Asia"
     r4 = Region.create name: "America"
     assert_equal [["Europe", 1.0/2, 1.0], ["Romania", 2.0/3, 1.0],
-                  ["Asia", 1.0/3, 1.0/2], ["America", 1.0/4, 1.0/3]],
-                 Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
+      ["Asia", 1.0/3, 1.0/2], ["America", 1.0/4, 1.0/3]],
+      Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
   end
-
+  
   def test_rebuild_nested_interval_tree
     Region.virtual_root = true
     r1 = Region.create name: "Europe"
@@ -208,10 +208,10 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     r4 = Region.create name: "America"
     Region.rebuild_nested_interval_tree!
     assert_equal [["Europe", 0.5, 1.0], ["Romania", 2.0/3, 1.0],
-                  ["Asia", 1.0/3, 1.0/2], ["America", 1.0/4, 1.0/3]],
-                 Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
+      ["Asia", 1.0/3, 1.0/2], ["America", 1.0/4, 1.0/3]],
+      Region.preorder.map { |r| [r.name, r.lft, r.rgt] }
   end
-
+  
   def test_root_update_keeps_interval
     Region.virtual_root = true
     r1 = Region.create name: "Europe"
@@ -223,7 +223,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     r4.save
     assert_equal lftq, r4.lftq
   end
-
+  
   def test_move_to_root_recomputes_interval
     Region.virtual_root = true
     r1 = Region.create name: "Europe"
@@ -235,5 +235,5 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     r2.save
     assert_not_equal lftq, r2.lftq
   end
-
+  
 end
