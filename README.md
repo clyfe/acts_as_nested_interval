@@ -178,6 +178,10 @@ This might change once the AR identity_map is finished.
 
 ## Authors
 
-This: https://github.com/clyfe/acts_as_nested_interval  
-Original: https://github.com/pythonic/acts_as_nested_interval  
-Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.
+Acknowledgement: http://arxiv.org/html/cs.DB/0401014 by Vadim Tropashko.  
+
+https://github.com/pythonic  
+https://github.com/clyfe  
+https://github.com/quangquach  
+https://github.com/kidlab  
+https://github.com/klobuczek  
