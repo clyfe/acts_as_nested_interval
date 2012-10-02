@@ -132,23 +132,26 @@ module ActsAsNestedInterval
       cpq = db_self.rgtp * lftp - db_self.lftp * rgtp
       cqp = db_self.lftq * rgtq - db_self.rgtq * lftq
       cqq = db_self.rgtp * lftq - db_self.lftp * rgtq
-      
-      db_descendants = db_self.descendants
-      
+
+      updates = {}
+      vars = [:lftp, :lftq]
+      newval = ->(p, q, side) { "#{p} * #{mysql_tmp}#{side}p + #{q} * #{mysql_tmp}#{side}q" }
+
       if has_attribute?(:rgtp) && has_attribute?(:rgtq)
-        db_descendants.update_all %(
-          rgtp = #{cpp} * rgtp + #{cpq} * rgtq,
-          rgtq = #{cqp} * #{mysql_tmp}rgtp + #{cqq} * rgtq
-        ), mysql_tmp && %(@rgtp := rgtp)
-        db_descendants.update_all "rgt = 1.0 * rgtp / rgtq" if has_attribute?(:rgt)
+        updates[:rgtp] = newval.(cpp, cpq, :rgt)
+        updates[:rgtq] = newval.(cqp, cqq, :rgt)
+        vars += [:rgtp, :rgtq]
+        updates[:rgt] = "1.0 * (#{updates[:rgtp]}) / (#{updates[:rgtq]})" if has_attribute?(:rgt)
       end
+
+      updates[:lftp] = newval.(cpp, cpq, :lft)
+      updates[:lftq] = newval.(cqp, cqq, :lft)
+      updates[:lft] = "1.0 * (#{updates[:lftp]}) / (#{updates[:lftq]})" if has_attribute?(:lft)
+
+      sql = updates.map{ |k, v| "#{k} = #{v}"}.join(', ')
+      if_vars = mysql_tmp && vars.map { |name| "(@#{name} := #{name})" }.join(' AND ')
       
-      db_descendants.update_all %(
-        lftp = #{cpp} * lftp + #{cpq} * lftq,
-        lftq = #{cqp} * #{mysql_tmp}lftp + #{cqq} * lftq
-      ), mysql_tmp && %(@lftp := lftp)
-      
-      db_descendants.update_all %(lft = 1.0 * lftp / lftq) if has_attribute?(:lft)
+      db_self.descendants.update_all sql, if_vars
     end
     
     def ancestor_of?(node)

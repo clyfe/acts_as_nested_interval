@@ -136,6 +136,23 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     assert_equal 1.0 * 3 / 7, new_zealand.rgt
   end
 
+  def test_move_from_left_to_right
+    earth = Region.create name: 'earth'
+    europe = Region.create name: 'europe', parent: earth
+    america = Region.create name: 'america', parent: earth
+    usa = Region.create name: 'usa', parent: america
+    texas = Region.create name: 'texas', parent: usa
+    houston = Region.create name: 'houston', parent: texas
+    texas.parent = europe # oh noes, natzis gaining ground
+    texas.save!
+    assert_equal 0, houston.reload.descendants.count
+    assert_equal 1, texas.reload.descendants.count
+    assert_equal 2, europe.reload.descendants.count
+    assert_equal 1, america.reload.descendants.count
+    assert_equal 0, usa.reload.descendants.count
+    assert_equal 5, earth.reload.descendants.count
+  end
+
   def test_destroy
     earth = Region.create name: "Earth"
     oceania = Region.create name: "Oceania", parent: earth
