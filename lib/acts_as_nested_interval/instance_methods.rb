@@ -145,10 +145,11 @@ module ActsAsNestedInterval
       
       db_descendants.update_all %(
         lftp = #{cpp} * lftp + #{cpq} * lftq,
-        lftq = #{cqp} * #{mysql_tmp}lftp + #{cqq} * lftq
+        lftq = #{cqp} * #{mysql_tmp}lftp + #{cqq} * lftq,
+        lft = 1.0 * lftp / lftq
       ), mysql_tmp && %(@lftp := lftp)
       
-      db_descendants.update_all %(lft = 1.0 * lftp / lftq) if has_attribute?(:lft)
+      #db_descendants.update_all %(lft = 1.0 * lftp / lftq) if has_attribute?(:lft)
     end
     
     def ancestor_of?(node)
