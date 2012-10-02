@@ -136,7 +136,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     assert_equal 1.0 * 3 / 7, new_zealand.rgt
   end
 
-  def test_move_complex
+  def test_move_from_left_to_right
     root = Region.create name: 'root'
     r1=Region.create(name: 'r1', parent: root)
     l1=Region.create(name: 'l1', parent: root)
@@ -145,44 +145,12 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     l4=Region.create(name: 'l4', parent: l3)
     l3.parent = r1
     l3.save!
-    l4.reload
     assert_equal 0, l4.reload.descendants.count
     assert_equal 1, l3.reload.descendants.count
-  end
-
-  def test_move_complex2
-    root = Region.create name: 'root'
-    r1=Region.create(name: 'r1', parent: root)
-    r2=Region.create(name: 'r2', parent: r1)
-    r3=Region.create(name: 'r3', parent: r2)
-    r4=Region.create(name: 'r4', parent: r3)
-    l1=Region.create(name: 'l1', parent: root)
-    r1.parent = l1
-    r1.save!
-    assert_equal 0, r4.reload.descendants.count
-    assert_equal 1, r3.reload.descendants.count
-    assert_equal 2, r2.reload.descendants.count
-    assert_equal 3, r1.reload.descendants.count
-    assert_equal 4, l1.reload.descendants.count
+    assert_equal 2, r1.reload.descendants.count
+    assert_equal 1, l1.reload.descendants.count
+    assert_equal 0, l2.reload.descendants.count
     assert_equal 5, root.reload.descendants.count
-  end
-
-
-  def test_move_complex3
-    root = Region.create name: 'root'
-    children = (0..4).map {|i| Region.create name: "c#{i}", parent: root}
-    r1=Region.create(name: 'r1', parent: children.last)
-    r2=Region.create(name: 'r2', parent: r1)
-    r3=Region.create(name: 'r3', parent: r2)
-    r4=Region.create(name: 'r4', parent: r3)
-    l1=Region.create(name: 'l1', parent: children.last)
-    r1.parent = l1
-    r1.save!
-    assert_equal 0, r4.reload.descendants.count
-    assert_equal 1, r3.reload.descendants.count
-    assert_equal 2, r2.reload.descendants.count
-    assert_equal 3, r1.reload.descendants.count
-    assert_equal 4, l1.reload.descendants.count
   end
 
   def test_destroy
