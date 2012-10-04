@@ -137,20 +137,20 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
   end
 
   def test_move_from_left_to_right
-    root = Region.create name: 'root'
-    r1=Region.create(name: 'r1', parent: root)
-    l1=Region.create(name: 'l1', parent: root)
-    l2=Region.create(name: 'l2', parent: l1)
-    l3=Region.create(name: 'l3', parent: l2)
-    l4=Region.create(name: 'l4', parent: l3)
-    l3.parent = r1
-    l3.save!
-    assert_equal 0, l4.reload.descendants.count
-    assert_equal 1, l3.reload.descendants.count
-    assert_equal 2, r1.reload.descendants.count
-    assert_equal 1, l1.reload.descendants.count
-    assert_equal 0, l2.reload.descendants.count
-    assert_equal 5, root.reload.descendants.count
+    earth = Region.create name: 'earth'
+    europe = Region.create name: 'europe', parent: earth
+    america = Region.create name: 'america', parent: earth
+    usa = Region.create name: 'usa', parent: america
+    texas = Region.create name: 'texas', parent: usa
+    houston = Region.create name: 'houston', parent: texas
+    texas.parent = europe # oh noes, natzis gaining ground
+    texas.save!
+    assert_equal 0, houston.reload.descendants.count
+    assert_equal 1, texas.reload.descendants.count
+    assert_equal 2, europe.reload.descendants.count
+    assert_equal 1, america.reload.descendants.count
+    assert_equal 0, usa.reload.descendants.count
+    assert_equal 5, earth.reload.descendants.count
   end
 
   def test_destroy
