@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    acts_as_nested_interval (0.0.7)
+    acts_as_nested_interval (0.0.8)
       rails (~> 3.2.1)
 
 GEM
@@ -50,6 +50,8 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.19)
     multi_json (1.1.0)
+    mysql2 (0.3.11)
+    pg (0.14.1)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.1)
@@ -94,4 +96,6 @@ PLATFORMS
 DEPENDENCIES
   acts_as_nested_interval!
   jquery-rails
+  mysql2
+  pg
   sqlite3
