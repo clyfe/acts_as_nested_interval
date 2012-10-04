@@ -10,7 +10,7 @@ mysql: &mysql
 
 postgresql: &postgresql
   adapter: postgresql
-  username: postgres
+  username: heinrich
   password:
   database: dummy_<%= Rails.env %>
   min_messages: ERROR
