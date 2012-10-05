@@ -164,7 +164,7 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     #make sure database calculates with the same precision as ruby
     #l3.rgt is calculated by ruby, but l4.rgt is calculated by the database
     #the difference is only visible with rgt as double
-    assert_equal 2, Region.where("rgt = (select rgt from regions where id =#{l3.id})").count
+    assert_equal 2, Region.where("abs(rgt - (select rgt from regions where id =#{l3.id})) < 1e-16").count
   end
 
   def test_destroy

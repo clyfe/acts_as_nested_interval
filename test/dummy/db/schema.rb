@@ -11,18 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120302143528) do
+ActiveRecord::Schema.define(:version => 20121004204252) do
 
   create_table "regions", :force => true do |t|
-    t.boolean "fiction",   :default => false, :null => false
+    t.boolean "fiction",                                   :default => false, :null => false
     t.integer "region_id"
-    t.integer "lftp",                         :null => false
-    t.integer "lftq",                         :null => false
-    t.integer "rgtp",                         :null => false
-    t.integer "rgtq",                         :null => false
-    t.float   "lft",                          :null => false
-    t.float   "rgt",                          :null => false
-    t.string  "name",                         :null => false
+    t.integer "lftp",                                                         :null => false
+    t.integer "lftq",                                                         :null => false
+    t.integer "rgtp",                                                         :null => false
+    t.integer "rgtq",                                                         :null => false
+    t.decimal "lft",       :precision => 31, :scale => 30,                    :null => false
+    t.decimal "rgt",       :precision => 31, :scale => 30,                    :null => false
+    t.string  "name",                                                         :null => false
   end
 
 end
