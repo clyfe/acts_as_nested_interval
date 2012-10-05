@@ -136,20 +136,20 @@ module ActsAsNestedInterval
       updates = {}
       vars = [:lftp, :lftq]
       newval = ->(p, q, side) { "#{p} * #{mysql_tmp}#{side}p + #{q} * #{mysql_tmp}#{side}q" }
-
+      one = sprintf("%#.30f", 1)
       if has_attribute?(:rgtp) && has_attribute?(:rgtq)
         updates[:rgtp] = newval.(cpp, cpq, :rgt)
         updates[:rgtq] = newval.(cqp, cqq, :rgt)
         vars += [:rgtp, :rgtq]
-        updates[:rgt] = "1.0 * (#{updates[:rgtp]}) / (#{updates[:rgtq]})" if has_attribute?(:rgt)
+        updates[:rgt] = "#{one} * (#{updates[:rgtp]}) / (#{updates[:rgtq]})" if has_attribute?(:rgt)
       end
 
       updates[:lftp] = newval.(cpp, cpq, :lft)
       updates[:lftq] = newval.(cqp, cqq, :lft)
-      updates[:lft] = "1.0 * (#{updates[:lftp]}) / (#{updates[:lftq]})" if has_attribute?(:lft)
+      updates[:lft] = "#{one} * (#{updates[:lftp]}) / (#{updates[:lftq]})" if has_attribute?(:lft)
 
       sql = updates.map{ |k, v| "#{k} = #{v}"}.join(', ')
-      if_vars = mysql_tmp && vars.map { |name| "(@#{name} := #{name})" }.join(' AND ')
+      if_vars = mysql_tmp && vars.map { |name| "(@#{name} := #{name}) IS NOT NULL" }.join(' AND ')
       
       db_self.descendants.update_all sql, if_vars
     end
