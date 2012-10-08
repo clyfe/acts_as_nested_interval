@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    acts_as_nested_interval (0.0.8)
+    acts_as_nested_interval (0.0.9)
       rails (~> 3.2.1)
 
 GEM

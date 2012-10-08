@@ -153,6 +153,20 @@ class ActsAsNestedIntervalTest < ActiveSupport::TestCase
     assert_equal 5, earth.reload.descendants.count
   end
 
+  def test_database_precision
+    root = Region.create name: 'root'
+    l1=Region.create(name: 'l1', parent: root)
+    l2=Region.create(name: 'l2', parent: l1)
+    l3=Region.create(name: 'l3', parent: l2)
+    l4=Region.create(name: 'l4', parent: l3)
+    l3.parent = l1
+    l3.save!
+    #make sure database calculates with the same precision as ruby
+    #l3.rgt is calculated by ruby, but l4.rgt is calculated by the database
+    #the difference is only visible with rgt as double
+    assert_equal 2, Region.where("abs(rgt - (select rgt from regions where id =#{l3.id})) < 1e-16").count
+  end
+
   def test_destroy
     earth = Region.create name: "Earth"
     oceania = Region.create name: "Oceania", parent: earth
