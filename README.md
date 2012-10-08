@@ -143,8 +143,8 @@ where x is the inverse of lftp modulo lftq.
 
 ## Moving nodes
 
-To move a record from `old.lftp, old.lftq` to `new.lftp, new.lftq`, apply this
-linear transform to lftp, lftq of all descendants:
+To move a record from `old.lftp, old.lftq` to `new.lftp, new.lftq`,
+the following linear transform is applied to lftp, lftq of all descendants:
 
     lftp := (old.lftq * new.rgtp - old.rgtq * new.lftp) * lftp
              + (old.rgtp * new.lftp - old.lftp * new.rgtp) * lftq
@@ -157,8 +157,10 @@ Example:
 
 ```ruby
 pacific = Region.create :name => "Pacific", :parent => earth
+ActiveRecord::Base.connection.execute("LOCK TABLES regions WRITE")
 oceania.parent = pacific
 oceania.save!
+ActiveRecord::Base.connection.execute("UNLOCK TABLES")
 ```
 
 ## Migrating from acts_as_tree
