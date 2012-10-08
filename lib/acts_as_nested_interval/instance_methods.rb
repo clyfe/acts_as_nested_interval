@@ -136,22 +136,22 @@ module ActsAsNestedInterval
       vars = Set.new
       mysql = ["MySQL", "Mysql2"].include?(connection.adapter_name)
       var = ->(v) { mysql ? vars.add?(v) ? "(@#{v} := #{v})" : "@#{v}" : v }
-      multiply =->(c, b) {"#{c} * #{var.(b)}"}
-      add = ->(a, b) {"#{a} + #{b}"}
+      multiply = ->(c, b) { "#{c} * #{var.(b)}" }
+      add = ->(a, b) { "#{a} + #{b}" }
       one = sprintf("%#.30f", 1)
-      divide = ->(p, q) {"#{one}*(#{p})/(#{q})"}
+      divide = ->(p, q) { "#{one} * (#{p}) / (#{q})" }
 
       if has_attribute?(:rgtp) && has_attribute?(:rgtq)
-        updates[:rgtp] = -> {add.(multiply.(cpp, :rgtp), multiply.(cpq, :rgtq))}
-        updates[:rgtq] = -> {add.(multiply.(cqp, :rgtp), multiply.(cqq, :rgtq))}
-        updates[:rgt] = -> {divide.(updates[:rgtp].(), updates[:rgtq].()) if has_attribute?(:rgt)}
+        updates[:rgtp] = -> { add.(multiply.(cpp, :rgtp), multiply.(cpq, :rgtq)) }
+        updates[:rgtq] = -> { add.(multiply.(cqp, :rgtp), multiply.(cqq, :rgtq)) }
+        updates[:rgt] = -> { divide.(updates[:rgtp].(), updates[:rgtq].()) } if has_attribute?(:rgt)
       end
 
-      updates[:lftp] = -> {add.(multiply.(cpp, :lftp), multiply.(cpq, :lftq))}
-      updates[:lftq] = -> {add.(multiply.(cqp, :lftp), multiply.(cqq, :lftq))}
-      updates[:lft] = -> {divide.(updates[:lftp].(), updates[:lftq].()) if has_attribute?(:lft)}
+      updates[:lftp] = -> { add.(multiply.(cpp, :lftp), multiply.(cpq, :lftq)) }
+      updates[:lftq] = -> { add.(multiply.(cqp, :lftp), multiply.(cqq, :lftq)) }
+      updates[:lft] = -> { divide.(updates[:lftp].(), updates[:lftq].()) } if has_attribute?(:lft)
 
-      sql = updates.map{ |k, v| "#{k} = #{v.()}"}.join(', ')
+      sql = updates.map { |k, v| "#{k} = #{v.()}" }.join(', ')
 
       db_self.descendants.update_all sql
     end
