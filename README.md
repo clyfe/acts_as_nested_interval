@@ -1,6 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/clyfe/acts_as_nested_interval.png)](http://travis-ci.org/clyfe/acts_as_nested_interval)
-
-# ActsAsNestedInterval
+# ActsAsNestedInterval [![Build Status](https://secure.travis-ci.org/clyfe/acts_as_nested_interval.png)](http://travis-ci.org/clyfe/acts_as_nested_interval)
 
 ## About
 
