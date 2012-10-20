@@ -12,7 +12,7 @@ If you don't need that give a look to https://github.com/stefankroes/ancestry ,
 that implements a simpler encoding model (variant of materialized path).  
 
 If your database supports recursive queryes (`WITH RECURSIVE`) or specific custom extensions
-(`CONNECT BY`) and you don't need portability, you're probably bettr off using those.
+(`CONNECT BY`) and you don't need portability, you're probably better off using those.
 
 
 ## Install
