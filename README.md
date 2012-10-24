@@ -165,8 +165,8 @@ ActiveRecord::Base.connection.execute("UNLOCK TABLES")
 ## Migrating from acts_as_tree
 
 If you come from acts_as_tree or another system where you only have a parent_id,
-to rebuild the intervals based on `acts_as_nested_set`, after you migrated the DB
-and created the columns required by `acts_as_nested_set` run:
+to rebuild the intervals based on `acts_as_nested_interval`, after you migrated the DB
+and created the columns required by `acts_as_nested_interval` run:
 
 ```ruby
 Region.rebuild_nested_interval_tree!
