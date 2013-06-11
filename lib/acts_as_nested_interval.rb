@@ -37,14 +37,14 @@ module ActsAsNestedInterval
     belongs_to :parent, class_name: name, foreign_key: nested_interval_foreign_key
     has_many :children, class_name: name, foreign_key: nested_interval_foreign_key,
       dependent: nested_interval_dependent
-    scope :roots, where(nested_interval_foreign_key => nil)
+    scope :roots, -> { where(nested_interval_foreign_key => nil) }
       
     if columns_hash["rgt"]
-      scope :preorder, order('rgt DESC, lftp ASC')
+      scope :preorder, -> { order('rgt DESC, lftp ASC') }
     elsif columns_hash["rgtp"] && columns_hash["rgtq"]
-      scope :preorder, order('1.0 * rgtp / rgtq DESC, lftp ASC')
+      scope :preorder, -> { order('1.0 * rgtp / rgtq DESC, lftp ASC') }
     else
-      scope :preorder, order('nested_interval_rgt(lftp, lftq) DESC, lftp ASC')
+      scope :preorder, -> { order('nested_interval_rgt(lftp, lftq) DESC, lftp ASC') }
     end
 
     before_create :create_nested_interval
