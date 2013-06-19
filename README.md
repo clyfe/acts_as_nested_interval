@@ -7,8 +7,7 @@ You can find all descendants or all ancestors with just one select query.
 You can insert and delete records without
 a full table update (compared to nested set, where at insert, half the table is updated on average).
 
-Nested sets/intervals are good if you need to sort in preorder at DB-level.  
-If you don't need that give a look to https://github.com/stefankroes/ancestry ,
+Make sure you really need this, otherwise give a look to https://github.com/stefankroes/ancestry ,
 that implements a simpler encoding model (variant of materialized path).  
 
 If your database supports recursive queryes (`WITH RECURSIVE`) or specific custom extensions
